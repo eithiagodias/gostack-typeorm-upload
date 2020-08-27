@@ -2,7 +2,7 @@ import fs from 'fs';
 import csvParse from 'csv-parse';
 
 import Transaction from '../models/Transaction';
-import CreateTransactionService, { Request } from './CreateTransactionService';
+import CreateTransactionService from './CreateTransactionService';
 
 class ImportTransactionsService {
   async execute(path: string): Promise<Transaction[]> {
@@ -19,9 +19,8 @@ class ImportTransactionsService {
         category: { title: line[3] },
       };
 
-      promisses.push(
-        Promise.resolve(transactionService.execute(request as Request)),
-      );
+      const promisse = Promise.resolve(transactionService.execute(request));
+      promisses.push(promisse);
     });
 
     await fs.promises.unlink(path);
