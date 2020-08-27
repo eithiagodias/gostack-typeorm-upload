@@ -40,7 +40,7 @@ class ImportTransactionsService {
 
     const parseCSV = readCSVStream.pipe(parseStream);
 
-    const lines = [];
+    const lines: Array<string> = [];
 
     parseCSV.on('data', line => {
       lines.push(line);
