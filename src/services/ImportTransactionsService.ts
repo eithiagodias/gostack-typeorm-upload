@@ -9,18 +9,19 @@ class ImportTransactionsService {
     const transactionService = new CreateTransactionService();
     const data = await this.loadCSV(path);
 
-    const promisses = [];
-
+    const promisses: Array<Promise<Transaction>> = [];
     data.map(async line => {
+      // eslint-disable-next-line radix
+      const value = Number.parseInt(line[2]);
       const request = {
-        title: line[0],
-        type: line[1],
-        value: line[2],
-        category: { title: line[3] },
+        title: line[0] as string,
+        type: line[1] as 'income' | 'outcome',
+        value,
+        category: { title: line[3] as string },
       };
 
       const promisse = Promise.resolve(transactionService.execute(request));
-      promisses.push(promisse);
+      promisses.push(promisse as Promise<Transaction>);
     });
 
     await fs.promises.unlink(path);

@@ -7,7 +7,7 @@ import TransactionsRepository from '../repositories/TransactionsRepository';
 
 interface Request {
   title: string;
-  type: 'income' | 'outcome';
+  type?: 'income' | 'outcome';
   value: number;
   category: {
     title: string;
