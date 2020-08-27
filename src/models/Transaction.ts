@@ -4,7 +4,6 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToOne,
   JoinColumn,
   ManyToOne,
 } from 'typeorm';
@@ -22,15 +21,15 @@ class Transaction {
   @Column()
   type: 'income' | 'outcome';
 
-  @Column()
+  @Column('decimal')
   value: number;
-
-  @Column({ select: false })
-  category_id: string;
 
   @ManyToOne(() => Category)
   @JoinColumn({ name: 'category_id' })
   category: Category;
+
+  @Column()
+  category_id: string;
 
   @CreateDateColumn()
   created_at: Date;

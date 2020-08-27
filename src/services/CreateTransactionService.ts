@@ -7,11 +7,9 @@ import TransactionsRepository from '../repositories/TransactionsRepository';
 
 interface Request {
   title: string;
-  type?: 'income' | 'outcome';
+  type: 'income' | 'outcome';
   value: number;
-  category: {
-    title: string;
-  };
+  category: string;
 }
 
 class CreateTransactionService {
@@ -29,19 +27,22 @@ class CreateTransactionService {
     }
 
     const categoriesRepository = getRepository(Category);
-    let categoryDb = await categoriesRepository.findOne({
-      where: { title: category.title },
+    let categoryExists = await categoriesRepository.findOne({
+      where: { title: category },
     });
 
-    if (!categoryDb) {
-      categoryDb = await categoriesRepository.save(category);
+    if (!categoryExists) {
+      categoryExists = categoriesRepository.create({
+        title: category,
+      });
+      await categoriesRepository.save(categoryExists);
     }
 
     const transaction = transactionRepository.create({
       title,
       type,
       value,
-      category_id: categoryDb.id,
+      category_id: categoryExists.id,
     });
 
     await transactionRepository.save(transaction);
